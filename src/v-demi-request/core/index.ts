@@ -1,9 +1,9 @@
 import { ref, readonly, WatchSource } from 'vue-demi';
 import { Key, VDemiRequestOptions } from '../types/option';
-import { mergeOptions, useDeps, useKey} from './methods';
+import { mergeOptions, useDeps, useKey } from './methods';
 import { usePlugins } from '../plugins';
 import { useStore } from './store';
-import { useInterval, useLocalUpdate, useRetry } from "./ablility";
+import { useInterval, useLocalUpdate, useRetry } from './ablility';
 
 export const useVDR = <T>(
     key: Key,
@@ -74,12 +74,12 @@ export const useVDR = <T>(
 
     if (options.immediate) send();
 
-    return {
-        data: readonly(data),
-        error: readonly(error),
+    return readonly({
+        data,
+        error,
         send,
-        loading: readonly(loading),
-        isPass: readonly(isPass),
+        loading,
+        isPass,
         localUpdate
-    };
+    });
 };

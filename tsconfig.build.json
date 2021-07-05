@@ -10,7 +10,9 @@
         "esModuleInterop": true,
         "declaration": true,
         "lib": ["esnext", "dom"],
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "emitDeclarationOnly": true,
+        "skipLibCheck": true
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+    "include": ["src/v-demi-request/*.ts", "src/v-demi-request/*.d.ts", "src/v-demi-request/*.tsx"]
 }

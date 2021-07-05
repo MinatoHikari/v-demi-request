@@ -6,7 +6,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import HelloWorld from './components/HelloWorld.vue';
-import { useVDR } from './v-demi-request/core';
+import { useVDR } from './v-demi-request';
 import { ref } from 'vue-demi';
 
 export default defineComponent({

@@ -1,20 +1,37 @@
 {
-  "version": "0.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "serve": "vite preview"
-  },
-  "dependencies": {
-    "vue": "^3.0.5",
-    "vue-demi": "^0.9.1"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^1.2.3",
-    "@vue/compiler-sfc": "^3.0.5",
-    "prettier": "^2.3.2",
-    "typescript": "^4.3.2",
-    "vite": "^2.3.8",
-    "vue-tsc": "^0.0.24"
-  }
+    "name": "v-demi-request",
+    "author": "MinatoHikari",
+    "version": "0.1.0",
+    "main": "dist/index.umd.js",
+    "module": "dist/index.es.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "dev": "vite",
+        "build": "vue-tsc --noEmit && vite build",
+        "build:type": "tsc --build tsconfig.build.json",
+        "serve": "vite preview"
+    },
+    "dependencies": {
+        "vue-demi": "latest",
+        "vue": "^3.1.4"
+    },
+    "devDependencies": {
+        "@types/node": "^16.0.0",
+        "@vitejs/plugin-vue": "^1.2.3",
+        "@vue/compiler-sfc": "^3.0.5",
+        "prettier": "^2.3.2",
+        "typescript": "^4.3.5",
+        "vite": "^2.3.8",
+        "vue": "^3.1.4",
+        "vue-tsc": "^0.2.0"
+    },
+    "peerDependencies": {
+        "@vue/composition-api": "^1.0.0-rc.13",
+        "vue": "^2.6.0 || >=3.0.0-rc.1"
+    },
+    "peerDependenciesMeta": {
+        "@vue/composition-api": {
+            "optional": true
+        }
+    }
 }
