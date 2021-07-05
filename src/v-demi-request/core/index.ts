@@ -1,4 +1,4 @@
-import { ref, readonly, WatchSource } from 'vue-demi';
+import { ref, readonly, computed } from 'vue-demi';
 import { Key, VDemiRequestOptions } from '../types/option';
 import { mergeOptions, useDeps, useKey } from './methods';
 import { usePlugins } from '../plugins';
@@ -38,7 +38,6 @@ export const useVDR = <T>(
                 .then((res) => {
                     data.value = res;
                     options.onResponse && options.onResponse(res);
-                    console.log(res);
                     if (!!options.cache) setCache(res);
                     if (!!options.interval && !pure) interval();
                     loading.value = false;
@@ -74,12 +73,12 @@ export const useVDR = <T>(
 
     if (options.immediate) send();
 
-    return readonly({
-        data,
-        error,
+    return {
+        data: computed(() => data.value),
+        error: computed(() => error.value),
         send,
-        loading,
-        isPass,
+        loading: computed(() => loading.value),
+        isPass: computed(() => isPass.value),
         localUpdate
-    });
+    };
 };

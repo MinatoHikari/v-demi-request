@@ -11,9 +11,8 @@ export default defineConfig({
             name: 'v-demi-request',
             fileName: 'index'
         },
-        rollupOptions: {
-            // 确保外部化处理那些你不想打包进库的依赖
-            external: ['vue']
-        }
+    },
+    optimizeDeps: {
+        exclude: ['vue-demi']
     }
 });

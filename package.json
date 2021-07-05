@@ -7,13 +7,11 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "dev": "vite",
-        "build": "vue-tsc --noEmit && vite build",
-        "build:type": "tsc --build tsconfig.build.json",
+        "build": "vue-tsc --noEmit && vite build && tsc --build tsconfig.build.json",
         "serve": "vite preview"
     },
     "dependencies": {
-        "vue-demi": "latest",
-        "vue": "^3.1.4"
+        "vue-demi": "latest"
     },
     "devDependencies": {
         "@types/node": "^16.0.0",
@@ -23,11 +21,12 @@
         "typescript": "^4.3.5",
         "vite": "^2.3.8",
         "vue": "^3.1.4",
-        "vue-tsc": "^0.2.0"
+        "vue-tsc": "^0.2.0",
+        "vue2": "npm:vue@2"
     },
     "peerDependencies": {
         "@vue/composition-api": "^1.0.0-rc.13",
-        "vue": "^2.6.0 || >=3.0.0-rc.1"
+        "vue": "^2.6.0 || >=3.0.5"
     },
     "peerDependenciesMeta": {
         "@vue/composition-api": {

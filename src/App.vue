@@ -7,7 +7,7 @@
 import { defineComponent } from 'vue';
 import HelloWorld from './components/HelloWorld.vue';
 import { useVDR } from './v-demi-request';
-import { ref } from 'vue-demi';
+import { onMounted, ref, watch } from 'vue-demi';
 
 export default defineComponent({
     name: 'App',
@@ -31,6 +31,10 @@ export default defineComponent({
                 cache: true
             }
         );
+
+        return {
+            data
+        };
     }
 });
 </script>
