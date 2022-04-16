@@ -8,7 +8,7 @@ import { useInterval, useLocalUpdate, useRetry } from './ablility';
 export const useVDR = <T>(
     key: Key,
     request: (...args: any) => Promise<any> = fetch,
-    oOptions: VDemiRequestOptions
+    oOptions: VDemiRequestOptions = {}
 ) => {
     const options = mergeOptions(oOptions);
     const data = ref<T | null>(null);
