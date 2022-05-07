@@ -2,8 +2,12 @@ import { ref, readonly, computed } from 'vue-demi';
 import { Key, VDemiRequestOptions } from '../types/option';
 import { mergeOptions, useDeps, useKey } from './methods';
 import { usePlugins } from '../plugins';
-import { useStore } from './store';
+import { globalOptionsSetter, useStore } from './store';
 import { useInterval, useLocalUpdate, useRetry } from './ablility';
+
+export const setGlobalOptions = (options: VDemiRequestOptions) => {
+    globalOptionsSetter(options);
+};
 
 export const useVDR = <T>(
     key: Key,

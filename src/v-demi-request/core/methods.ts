@@ -12,6 +12,7 @@ import {
     WatchSource
 } from 'vue-demi';
 import { Key, VDemiRequestOptions } from '../types/option';
+import { globalOptionsGetter } from './store';
 
 export const mergeOptions = (options: VDemiRequestOptions) => {
     const defaultOptions = {
@@ -22,7 +23,9 @@ export const mergeOptions = (options: VDemiRequestOptions) => {
         initWithCache: true
     } as VDemiRequestOptions;
 
-    return { ...defaultOptions, ...options };
+    const global = globalOptionsGetter();
+
+    return { ...defaultOptions, ...global, ...options };
 };
 
 export const useListeners = (addFn: () => void, removeFn: () => void, inKeepalive: boolean) => {
@@ -107,4 +110,3 @@ export const useDeps = <T>(deps: (WatchSource<unknown> | object)[] | undefined, 
         isPass
     };
 };
-

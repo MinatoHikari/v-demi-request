@@ -3,6 +3,8 @@ import { Key, VDemiRequestOptions } from '../types/option';
 import { useSimpleKey } from './methods';
 import { WatchStopHandle } from '@vue/runtime-core';
 
+let globalOptions: VDemiRequestOptions = {};
+
 const store = ref(new Map<string, NonNullable<any> | null>());
 
 export const useStore = <T>(key: Key, data: Ref<T | null>, options: VDemiRequestOptions) => {
@@ -64,4 +66,12 @@ export const useStore = <T>(key: Key, data: Ref<T | null>, options: VDemiRequest
         getCache,
         useCacheForRequestResult
     };
+};
+
+export const globalOptionsSetter = (options: VDemiRequestOptions) => {
+    globalOptions = options;
+};
+
+export const globalOptionsGetter = () => {
+    return globalOptions;
 };
