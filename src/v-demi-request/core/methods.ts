@@ -100,9 +100,11 @@ export const useDeps = <T>(
         if (isRef(key) || typeof key === 'function') paramDeps.push(key);
     }
 
-    if (deps && deps.length > 0) {
+    const depsList = [...(deps ?? []), ...paramDeps];
+
+    if (depsList.length > 0) {
         watch(
-            [...deps, ...paramDeps],
+            depsList,
             (newValList) => {
                 isPass.value = true;
                 newValList.forEach((i) => {
