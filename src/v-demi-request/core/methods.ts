@@ -108,8 +108,8 @@ export const useDeps = <T>(
                 newValList.forEach((i) => {
                     if (!i) isPass.value = false;
                 });
-                if (isPass) {
-                    watchHook.trigger;
+                if (isPass.value) {
+                    watchHook.trigger({});
                 }
             },
             {
