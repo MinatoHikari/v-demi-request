@@ -21,9 +21,9 @@ export interface VDemiRequestOptions {
     onBeforeSend?: (key: Key) => void;
 }
 
-export type SimpleKey = string | null | WatchSource<string | null>;
+export type SimpleKey = string | WatchSource<string>;
 
-export type Key = SimpleKey | [key: SimpleKey, ...others: any];
+export type Key = SimpleKey;
 
 export type CacheConfig = {
     cacheTime: number;

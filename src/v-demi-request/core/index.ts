@@ -1,20 +1,21 @@
-import { ref, readonly, computed } from 'vue-demi';
+import { ref, readonly, computed, UnwrapRef, unref } from 'vue-demi';
 import { Key, VDemiRequestOptions } from '../types/option';
-import { mergeOptions, useDeps, useKey } from './methods';
+import { mergeOptions, useDeps, useKey, useSimpleKey } from './methods';
 import { usePlugins } from '../plugins';
 import { globalOptionsSetter, useStore } from './store';
 import { useInterval, useLocalUpdate, useRetry } from './ablility';
 import { createEventHook, EventHookOn } from '@vueuse/core';
+import { VDRResult } from '../types/main';
 
-export const setGlobalOptions = (options: VDemiRequestOptions) => {
+const setGlobalOptions = (options: VDemiRequestOptions) => {
     globalOptionsSetter(options);
 };
 
-export const useVDR = <T>(
-    key: Key,
-    request: (...args: any) => Promise<any> = fetch,
+function useVDR<K extends Key, T, P extends Array<unknown>>(
+    [key, ...depsArray]: [K, ...P],
+    request: (key: string, ...args: UnwrapRef<P>) => Promise<T>,
     oOptions: VDemiRequestOptions = {}
-) => {
+): VDRResult<T> {
     const options = mergeOptions(oOptions);
     const beforeSendHook = createEventHook();
     const responseHook = createEventHook<T>();
@@ -28,7 +29,7 @@ export const useVDR = <T>(
     const loading = ref(false);
     const { setCache, useCacheForRequestResult } = useStore(key, data, options);
 
-    const { isPass, onDepsChange } = useDeps(options.requiredDeps, key);
+    const { isPass, onDepsChange } = useDeps(options.requiredDeps, [key, ...depsArray]);
 
     const { localUpdate } = useLocalUpdate(data, setCache);
 
@@ -42,13 +43,12 @@ export const useVDR = <T>(
 
             loading.value = true;
 
-            beforeSendHook.trigger({});
-            const params = useKey(key);
-            if (!params[0]) return false;
-
-            return request(...params)
+            await beforeSendHook.trigger({});
+            const [unwrapKey, params] = useKey<K, P>([key, ...depsArray]);
+            if (!unwrapKey) return false;
+            return request(unwrapKey, ...((params as UnwrapRef<P>) ?? []))
                 .then((res) => {
-                    data.value = res;
+                    data.value = ref(res).value;
                     responseHook.trigger(res);
                     if (!!options.cache) setCache(res);
                     if (!!options.interval && !pure) interval();
@@ -95,6 +95,8 @@ export const useVDR = <T>(
         isPass: computed(() => isPass.value),
         onSuccess: responseHook.on as EventHookOn<T>,
         onError: errorHook.on as EventHookOn,
-        localUpdate
+        temporarilyUpdate: localUpdate
     };
-};
+}
+
+export { useVDR, setGlobalOptions };

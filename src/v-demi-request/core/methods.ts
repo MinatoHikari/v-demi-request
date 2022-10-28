@@ -58,36 +58,26 @@ export const useListeners = (addFn: () => void, removeFn: () => void, inKeepaliv
     }
 };
 
-export const useSimpleKey = (key: Key) => {
-    if (Array.isArray(key)) {
-        if (typeof key[0] === 'function') return key[0]();
-        return unref(key[0]);
-    } else {
-        if (typeof key === 'function') return key();
-        return unref(key);
-    }
+export const useSimpleKey = (key: Key): string => {
+    if (typeof key === 'function') return key();
+    return unref(key) as string;
 };
 
-export const useKey = (key: Key) => {
+export const useKey = <K, P extends Array<unknown>>(key: [K, ...P]) => {
     try {
-        if (Array.isArray(key)) {
-            return key.map((i) => {
-                if (typeof i === 'function') return i();
-                return unref(i);
-            });
-        } else {
-            if (typeof key === 'function') return [key()];
-            return [unref(key)];
-        }
+        return key.map((i) => {
+            if (typeof i === 'function') return (i as CallableFunction)();
+            return unref(i);
+        });
     } catch (e) {
         console.error(e);
         return [null];
     }
 };
 
-export const useDeps = <T>(
+export const useDeps = <K extends Key, P extends Array<unknown>>(
     deps: (WatchSource<unknown> | object)[] | undefined,
-    key: Key
+    key: [K, ...P]
 ): {
     isPass: Ref<boolean>;
     onDepsChange: EventHookOn;
@@ -96,14 +86,13 @@ export const useDeps = <T>(
     const isPass = ref(true);
 
     let paramDeps: (WatchSource<unknown> | object)[] = [];
-    if (Array.isArray(key)) {
-        paramDeps = key.filter((i) => isRef(i) || typeof i === 'function' || isReactive(i));
-    } else {
-        if (isRef(key) || typeof key === 'function') paramDeps.push(key);
-    }
+    paramDeps = key.filter((i) => isRef(i) || typeof i === 'function' || isReactive(i)) as (
+        | object
+        | WatchSource
+    )[];
 
     const depsList = [...(deps ?? []), ...paramDeps];
-
+    console.log(depsList);
     if (depsList.length > 0) {
         watch(
             depsList,

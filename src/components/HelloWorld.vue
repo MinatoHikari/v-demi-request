@@ -48,11 +48,10 @@ export default defineComponent({
     },
     setup: () => {
         const count = ref(0);
-        const {} = useVDR([
-            'http://10.160.142.80:10000/auth/menu/getMenulist',
-            { current: 1, size: 20 },
-            count
-        ]);
+        const {} = useVDR(['http://10.160.142.80:10000/auth/menu/getMenulist'], fetch, {
+            requiredDeps: [count],
+            cache: false
+        });
         return { count };
     }
 });
