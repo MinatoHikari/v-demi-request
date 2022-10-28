@@ -71,8 +71,10 @@ export const useSimpleKey = (key: Key) => {
 export const useKey = (key: Key) => {
     try {
         if (Array.isArray(key)) {
-            if (typeof key[0] === 'function') return [key[0](), ...key.slice(1)];
-            return [unref(key[0]), ...key.slice(1)];
+            return key.map((i) => {
+                if (typeof i === 'function') return i();
+                return unref(i);
+            });
         } else {
             if (typeof key === 'function') return [key()];
             return [unref(key)];
