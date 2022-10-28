@@ -63,7 +63,7 @@ export const useSimpleKey = (key: Key): string => {
     return unref(key) as string;
 };
 
-export const useKey = <K, P extends Array<unknown>>(key: [K, ...P]) => {
+export const useKey = <K>(key: [K]) => {
     try {
         return key.map((i) => {
             if (typeof i === 'function') return (i as CallableFunction)();
@@ -75,9 +75,9 @@ export const useKey = <K, P extends Array<unknown>>(key: [K, ...P]) => {
     }
 };
 
-export const useDeps = <K extends Key, P extends Array<unknown>>(
+export const useDeps = <K extends Key>(
     deps: (WatchSource<unknown> | object)[] | undefined,
-    key: [K, ...P]
+    key: [K]
 ): {
     isPass: Ref<boolean>;
     onDepsChange: EventHookOn;

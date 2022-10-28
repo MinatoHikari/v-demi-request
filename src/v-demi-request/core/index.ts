@@ -1,4 +1,4 @@
-import { ref, readonly, computed, UnwrapRef, unref } from 'vue-demi';
+import { ref, readonly, computed, UnwrapRef, unref, Ref, WatchSource } from 'vue-demi';
 import { Key, VDemiRequestOptions } from '../types/option';
 import { mergeOptions, useDeps, useKey, useSimpleKey } from './methods';
 import { usePlugins } from '../plugins';
@@ -11,9 +11,9 @@ const setGlobalOptions = (options: VDemiRequestOptions) => {
     globalOptionsSetter(options);
 };
 
-function useVDR<K extends Key, T, P extends Array<unknown>>(
-    [key, ...depsArray]: [K, ...P],
-    request: (key: string, ...args: UnwrapRef<P>) => Promise<T>,
+function useVDR<K extends Key, T>(
+    key: K,
+    request: ((key: string) => Promise<T>) | (() => Promise<T>) | ((key?: string) => Promise<T>),
     oOptions: VDemiRequestOptions = {}
 ): VDRResult<T> {
     const options = mergeOptions(oOptions);
@@ -29,7 +29,7 @@ function useVDR<K extends Key, T, P extends Array<unknown>>(
     const loading = ref(false);
     const { setCache, useCacheForRequestResult } = useStore(key, data, options);
 
-    const { isPass, onDepsChange } = useDeps(options.requiredDeps, [key, ...depsArray]);
+    const { isPass, onDepsChange } = useDeps(options.requiredDeps, [key]);
 
     const { localUpdate } = useLocalUpdate(data, setCache);
 
@@ -44,9 +44,9 @@ function useVDR<K extends Key, T, P extends Array<unknown>>(
             loading.value = true;
 
             await beforeSendHook.trigger({});
-            const [unwrapKey, params] = useKey<K, P>([key, ...depsArray]);
+            const [unwrapKey] = useKey([key]);
             if (!unwrapKey) return false;
-            return request(unwrapKey, ...((params as UnwrapRef<P>) ?? []))
+            return request(unwrapKey)
                 .then((res) => {
                     data.value = ref(res).value;
                     responseHook.trigger(res);

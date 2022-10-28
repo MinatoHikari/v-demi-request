@@ -15,7 +15,7 @@ export default defineComponent({
         HelloWorld
     },
     setup() {
-        const { data, error, send, loading, localUpdate, isPass } = useVDR(
+        const { data, error, send, loading, isPass } = useVDR(
             [ref('https://api.github.com/users/MinatoHikari')],
             async (...params: any[]) => {
                 const p = [...params];
