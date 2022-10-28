@@ -12,7 +12,9 @@
         "lib": ["esnext", "dom"],
         "outDir": "./dist",
         "emitDeclarationOnly": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "types": ["web-bluetooth"]
     },
-    "include": ["src/v-demi-request/*.ts", "src/v-demi-request/*.d.ts", "src/v-demi-request/*.tsx"]
+    "include": ["src/v-demi-request/*.ts", "src/v-demi-request/*.d.ts", "src/v-demi-request/*.tsx"],
+    "exclude": ["dist", "node_modules"]
 }

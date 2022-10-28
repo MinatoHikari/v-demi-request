@@ -10,7 +10,9 @@
         "esModuleInterop": true,
         "declaration": true,
         "lib": ["esnext", "dom"],
+        "types": ["web-bluetooth"],
         "outDir": "./dist"
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+    "exclude": ["dist", "node_modules"]
 }

@@ -9,10 +9,12 @@ import {
     ref,
     unref,
     watch,
-    WatchSource
+    WatchSource,
+    Ref
 } from 'vue-demi';
 import { Key, VDemiRequestOptions } from '../types/option';
 import { globalOptionsGetter } from './store';
+import { createEventHook, EventHookOn } from '@vueuse/core';
 
 export const mergeOptions = (options: VDemiRequestOptions) => {
     const defaultOptions = {
@@ -81,7 +83,14 @@ export const useKey = (key: Key) => {
     }
 };
 
-export const useDeps = <T>(deps: (WatchSource<unknown> | object)[] | undefined, key: Key) => {
+export const useDeps = <T>(
+    deps: (WatchSource<unknown> | object)[] | undefined,
+    key: Key
+): {
+    isPass: Ref<boolean>;
+    onDepsChange: EventHookOn;
+} => {
+    const watchHook = createEventHook();
     const isPass = ref(true);
 
     let paramDeps: (WatchSource<unknown> | object)[] = [];
@@ -99,6 +108,9 @@ export const useDeps = <T>(deps: (WatchSource<unknown> | object)[] | undefined, 
                 newValList.forEach((i) => {
                     if (!i) isPass.value = false;
                 });
+                if (isPass) {
+                    watchHook.trigger;
+                }
             },
             {
                 immediate: true
@@ -107,6 +119,7 @@ export const useDeps = <T>(deps: (WatchSource<unknown> | object)[] | undefined, 
     }
 
     return {
-        isPass
+        isPass,
+        onDepsChange: watchHook.on
     };
 };

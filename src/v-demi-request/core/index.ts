@@ -4,6 +4,7 @@ import { mergeOptions, useDeps, useKey } from './methods';
 import { usePlugins } from '../plugins';
 import { globalOptionsSetter, useStore } from './store';
 import { useInterval, useLocalUpdate, useRetry } from './ablility';
+import { createEventHook, EventHookOn } from '@vueuse/core';
 
 export const setGlobalOptions = (options: VDemiRequestOptions) => {
     globalOptionsSetter(options);
@@ -15,12 +16,19 @@ export const useVDR = <T>(
     oOptions: VDemiRequestOptions = {}
 ) => {
     const options = mergeOptions(oOptions);
+    const beforeSendHook = createEventHook();
+    const responseHook = createEventHook<T>();
+    const errorHook = createEventHook<T>();
+    if (options.onBeforeSend) beforeSendHook.on(options.onBeforeSend);
+    if (options.onResponse) beforeSendHook.on(options.onResponse);
+    if (options.onError) beforeSendHook.on(options.onError);
+
     const data = ref<T | null>(null);
     const error = ref<any | null>(null);
     const loading = ref(false);
     const { setCache, useCacheForRequestResult } = useStore(key, data, options);
 
-    const { isPass } = useDeps(options.requiredDeps, key);
+    const { isPass, onDepsChange } = useDeps(options.requiredDeps, key);
 
     const { localUpdate } = useLocalUpdate(data, setCache);
 
@@ -34,14 +42,14 @@ export const useVDR = <T>(
 
             loading.value = true;
 
-            options.onBeforeSend && options.onBeforeSend(key);
+            beforeSendHook.trigger({});
             const params = useKey(key);
             if (!params[0]) return false;
 
             return request(...params)
                 .then((res) => {
                     data.value = res;
-                    options.onResponse && options.onResponse(res);
+                    responseHook.trigger(res);
                     if (!!options.cache) setCache(res);
                     if (!!options.interval && !pure) interval();
                     loading.value = false;
@@ -49,7 +57,7 @@ export const useVDR = <T>(
                 })
                 .catch((err) => {
                     error.value = err;
-                    options.onError && options.onError(error);
+                    errorHook.trigger(err);
                     if (!!options.retry) retry();
                     loading.value = false;
                     return false;
@@ -75,6 +83,8 @@ export const useVDR = <T>(
         }
     );
 
+    onDepsChange(() => send());
+
     if (options.immediate) send();
 
     return {
@@ -83,6 +93,8 @@ export const useVDR = <T>(
         send,
         loading: computed(() => loading.value),
         isPass: computed(() => isPass.value),
+        onSuccess: responseHook.on as EventHookOn<T>,
+        onError: errorHook.on as EventHookOn,
         localUpdate
     };
 };

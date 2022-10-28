@@ -1,7 +1,6 @@
-import { computed, ref, Ref, unref, watch, ComputedRef } from 'vue-demi';
+import { computed, ref, Ref, unref, watch, ComputedRef, WatchStopHandle } from 'vue-demi';
 import { Key, VDemiRequestOptions } from '../types/option';
 import { useSimpleKey } from './methods';
-import { WatchStopHandle } from '@vue/runtime-core';
 
 let globalOptions: VDemiRequestOptions = {};
 
