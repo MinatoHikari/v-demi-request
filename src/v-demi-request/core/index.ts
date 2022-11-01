@@ -4,7 +4,7 @@ import { mergeOptions, useDeps, useKey, useSimpleKey } from './methods';
 import { usePlugins } from '../plugins';
 import { globalOptionsSetter, useStore } from './store';
 import { useInterval, useLocalUpdate, useRetry } from './ablility';
-import { createEventHook, EventHookOn } from '@vueuse/core';
+import { createEventHook, EventHookOn, tryOnBeforeMount, tryOnUnmounted } from '@vueuse/core';
 import { VDRResult } from '../types/main';
 
 const setGlobalOptions = (options: VDemiRequestOptions) => {
@@ -29,11 +29,9 @@ function useVDR<K extends Key, T>(
     const loading = ref(false);
     const { setCache, useCacheForRequestResult } = useStore(key, data, options);
 
-    const { isPass, onDepsChange } = useDeps(
-        options.requiredDeps,
-        [key],
-        options.enableAfterVmDestroyed
-    );
+    const { isPass, onDepsChange, enableAfterVmDestroyedFlag } = useDeps(options.requiredDeps, [
+        key
+    ]);
 
     const { localUpdate } = useLocalUpdate(data, setCache);
 
@@ -89,7 +87,14 @@ function useVDR<K extends Key, T>(
 
     onDepsChange(() => send());
 
-    if (options.immediate) send();
+    tryOnUnmounted(() => {
+        if (unref(options.enableAfterVmDestroyed)) enableAfterVmDestroyedFlag.value = false;
+    });
+
+    tryOnBeforeMount(async () => {
+        enableAfterVmDestroyedFlag.value = true;
+        if (options.immediate) await send();
+    });
 
     return {
         data: computed(() => data.value),

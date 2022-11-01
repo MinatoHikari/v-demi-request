@@ -14,13 +14,7 @@ import {
 } from 'vue-demi';
 import { Key, VDemiRequestOptions } from '../types/option';
 import { globalOptionsGetter } from './store';
-import {
-    createEventHook,
-    EventHookOn,
-    tryOnBeforeMount,
-    tryOnBeforeUnmount,
-    tryOnMounted
-} from '@vueuse/core';
+import { createEventHook, EventHookOn, tryOnBeforeMount, tryOnUnmounted } from '@vueuse/core';
 
 export const mergeOptions = (options: VDemiRequestOptions) => {
     const defaultOptions = {
@@ -84,11 +78,11 @@ export const useKey = <K>(key: [K]) => {
 
 export const useDeps = <K extends Key>(
     deps: (WatchSource<unknown> | object)[] | undefined,
-    key: [K],
-    enableAfterVmDestroyed?: boolean | Ref<boolean>
+    key: [K]
 ): {
     isPass: Ref<boolean>;
     onDepsChange: EventHookOn;
+    enableAfterVmDestroyedFlag: Ref<boolean>;
 } => {
     const watchHook = createEventHook();
     const isPass = ref(true);
@@ -120,16 +114,9 @@ export const useDeps = <K extends Key>(
         );
     }
 
-    tryOnBeforeUnmount(() => {
-        if (unref(enableAfterVmDestroyed)) enableAfterVmDestroyedFlag.value = false;
-    });
-
-    tryOnBeforeMount(() => {
-        enableAfterVmDestroyedFlag.value = true;
-    });
-
     return {
         isPass,
-        onDepsChange: watchHook.on
+        onDepsChange: watchHook.on,
+        enableAfterVmDestroyedFlag
     };
 };
