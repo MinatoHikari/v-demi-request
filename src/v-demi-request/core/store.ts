@@ -46,11 +46,7 @@ export const useStore = <T>(key: Key, data: Ref<T | null>, options: VDemiRequest
     };
 
     const useCacheForRequestResult = () => {
-        if (
-            !!options.cache &&
-            typeof options.cache !== 'boolean' &&
-            !options.cache.backgroundRequest
-        ) {
+        if (!!options.cache) {
             const cacheData = getCache();
             if (!!cacheData) {
                 data.value = cacheData;

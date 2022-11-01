@@ -11,7 +11,6 @@ export interface VDemiRequestOptions {
     requiredDeps?: (WatchSource<unknown> | object)[];
 
     initWithCache?: boolean;
-    enableAfterVmDestroyed?: boolean | Ref<boolean>;
     cache?: boolean | CacheConfig;
     resendOnDocumentReactive?: boolean;
     refreshWhenOnline?: boolean;

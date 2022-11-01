@@ -28,6 +28,10 @@
     </p>
 
     <button type="button" @click="count++">count is: {{ count }}</button>
+    <button type="button" @click="boolean = !boolean">boolean is: {{ boolean }}</button>
+    <div>
+        <button @click="$router.push('/test')">totest</button>
+    </div>
     <p>
         Edit
         <code>components/HelloWorld.vue</code>
@@ -36,8 +40,9 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue';
+import { ref, defineComponent, watch } from 'vue';
 import { useVDR } from '../v-demi-request';
+import { useBool } from './global';
 export default defineComponent({
     name: 'HelloWorld',
     props: {
@@ -48,17 +53,21 @@ export default defineComponent({
     },
     setup: () => {
         const count = ref(0);
-        const {} = useVDR(
-            ref('http://10.160.142.80:10000/auth/menu/getMenulist'),
+        const { boolean } = useBool();
+        const { isPass } = useVDR(
+            ref('http://10.160.137.189:10000/verifyCode'),
             async (url?: string) => {
-                return fetch(url??'');
+                return fetch(url ?? '');
             },
             {
-                requiredDeps: [count],
+                requiredDeps: [count, boolean],
                 cache: false
             }
         );
-        return { count };
+        watch(boolean, (val) => {
+            console.log('isPass', isPass.value);
+        });
+        return { count, boolean };
     }
 });
 </script>

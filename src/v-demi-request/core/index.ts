@@ -29,9 +29,7 @@ function useVDR<K extends Key, T>(
     const loading = ref(false);
     const { setCache, useCacheForRequestResult } = useStore(key, data, options);
 
-    const { isPass, onDepsChange, enableAfterVmDestroyedFlag } = useDeps(options.requiredDeps, [
-        key
-    ]);
+    const { isPass, onDepsChange } = useDeps(options.requiredDeps, [key]);
 
     const { localUpdate } = useLocalUpdate(data, setCache);
 
@@ -40,8 +38,16 @@ function useVDR<K extends Key, T>(
      * @param pure invoke interval casually
      */
     const send = async (pure: boolean = false) => {
+        console.log(isPass.value);
         if (isPass.value) {
-            if (useCacheForRequestResult()) return false;
+            if (useCacheForRequestResult()) {
+                responseHook.trigger(data.value as T);
+                if (
+                    options.cache &&
+                    (typeof options.cache === 'boolean' || !options.cache.backgroundRequest)
+                )
+                    return true;
+            }
 
             loading.value = true;
 
@@ -87,12 +93,7 @@ function useVDR<K extends Key, T>(
 
     onDepsChange(() => send());
 
-    tryOnUnmounted(() => {
-        if (!unref(options.enableAfterVmDestroyed)) enableAfterVmDestroyedFlag.value = false;
-    });
-
     tryOnBeforeMount(async () => {
-        enableAfterVmDestroyedFlag.value = true;
         if (options.immediate) await send();
     });
 

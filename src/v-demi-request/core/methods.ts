@@ -82,11 +82,9 @@ export const useDeps = <K extends Key>(
 ): {
     isPass: Ref<boolean>;
     onDepsChange: EventHookOn;
-    enableAfterVmDestroyedFlag: Ref<boolean>;
 } => {
     const watchHook = createEventHook();
     const isPass = ref(true);
-    const enableAfterVmDestroyedFlag = ref(true);
 
     let paramDeps: (WatchSource<unknown> | object)[] = [];
     paramDeps = key.filter((i) => isRef(i) || typeof i === 'function' || isReactive(i)) as (
@@ -94,8 +92,7 @@ export const useDeps = <K extends Key>(
         | WatchSource
     )[];
 
-    const depsList = [...(deps ?? []), ...paramDeps, enableAfterVmDestroyedFlag];
-    console.log(depsList);
+    const depsList = [...(deps ?? []), ...paramDeps];
     if (depsList.length > 0) {
         watch(
             depsList,
@@ -116,7 +113,6 @@ export const useDeps = <K extends Key>(
 
     return {
         isPass,
-        onDepsChange: watchHook.on,
-        enableAfterVmDestroyedFlag
+        onDepsChange: watchHook.on
     };
 };
