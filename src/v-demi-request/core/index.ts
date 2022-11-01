@@ -88,7 +88,7 @@ function useVDR<K extends Key, T>(
     onDepsChange(() => send());
 
     tryOnUnmounted(() => {
-        if (unref(options.enableAfterVmDestroyed)) enableAfterVmDestroyedFlag.value = false;
+        if (!unref(options.enableAfterVmDestroyed)) enableAfterVmDestroyedFlag.value = false;
     });
 
     tryOnBeforeMount(async () => {
