@@ -14,7 +14,13 @@ import {
 } from 'vue-demi';
 import { Key, VDemiRequestOptions } from '../types/option';
 import { globalOptionsGetter } from './store';
-import { createEventHook, EventHookOn } from '@vueuse/core';
+import {
+    createEventHook,
+    EventHookOn,
+    tryOnBeforeMount,
+    tryOnBeforeUnmount,
+    tryOnMounted
+} from '@vueuse/core';
 
 export const mergeOptions = (options: VDemiRequestOptions) => {
     const defaultOptions = {
@@ -22,7 +28,8 @@ export const mergeOptions = (options: VDemiRequestOptions) => {
         requiredDeps: [],
         resendOnDocumentReactive: true,
         retry: true,
-        initWithCache: true
+        initWithCache: true,
+        enableAfterVmDestroyed: false
     } as VDemiRequestOptions;
 
     const global = globalOptionsGetter();
@@ -77,13 +84,15 @@ export const useKey = <K>(key: [K]) => {
 
 export const useDeps = <K extends Key>(
     deps: (WatchSource<unknown> | object)[] | undefined,
-    key: [K]
+    key: [K],
+    enableAfterVmDestroyed?: boolean | Ref<boolean>
 ): {
     isPass: Ref<boolean>;
     onDepsChange: EventHookOn;
 } => {
     const watchHook = createEventHook();
     const isPass = ref(true);
+    const enableAfterVmDestroyedFlag = ref(true);
 
     let paramDeps: (WatchSource<unknown> | object)[] = [];
     paramDeps = key.filter((i) => isRef(i) || typeof i === 'function' || isReactive(i)) as (
@@ -91,7 +100,7 @@ export const useDeps = <K extends Key>(
         | WatchSource
     )[];
 
-    const depsList = [...(deps ?? []), ...paramDeps];
+    const depsList = [...(deps ?? []), ...paramDeps, enableAfterVmDestroyedFlag];
     console.log(depsList);
     if (depsList.length > 0) {
         watch(
@@ -110,6 +119,14 @@ export const useDeps = <K extends Key>(
             }
         );
     }
+
+    tryOnBeforeUnmount(() => {
+        enableAfterVmDestroyedFlag.value = unref(enableAfterVmDestroyed) ?? false;
+    });
+
+    tryOnBeforeMount(() => {
+        enableAfterVmDestroyedFlag.value = true;
+    });
 
     return {
         isPass,

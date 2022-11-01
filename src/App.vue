@@ -16,7 +16,7 @@ export default defineComponent({
     },
     setup() {
         const { data, error, send, loading, isPass } = useVDR(
-            [ref('https://api.github.com/users/MinatoHikari')],
+            ref('https://api.github.com/users/MinatoHikari'),
             async (...params: any[]) => {
                 const p = [...params];
                 const res = await fetch(p[0], p[1]);

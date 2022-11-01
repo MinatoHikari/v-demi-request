@@ -29,7 +29,11 @@ function useVDR<K extends Key, T>(
     const loading = ref(false);
     const { setCache, useCacheForRequestResult } = useStore(key, data, options);
 
-    const { isPass, onDepsChange } = useDeps(options.requiredDeps, [key]);
+    const { isPass, onDepsChange } = useDeps(
+        options.requiredDeps,
+        [key],
+        options.enableAfterVmDestroyed
+    );
 
     const { localUpdate } = useLocalUpdate(data, setCache);
 

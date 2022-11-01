@@ -9,7 +9,9 @@ export interface VDemiRequestOptions {
      * Once dependencies' value/result in it are all true, request can be sent normally
      */
     requiredDeps?: (WatchSource<unknown> | object)[];
+
     initWithCache?: boolean;
+    enableAfterVmDestroyed?: boolean | Ref<boolean>;
     cache?: boolean | CacheConfig;
     resendOnDocumentReactive?: boolean;
     refreshWhenOnline?: boolean;
