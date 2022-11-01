@@ -121,7 +121,7 @@ export const useDeps = <K extends Key>(
     }
 
     tryOnBeforeUnmount(() => {
-        enableAfterVmDestroyedFlag.value = unref(enableAfterVmDestroyed) ?? false;
+        if (unref(enableAfterVmDestroyed)) enableAfterVmDestroyedFlag.value = false;
     });
 
     tryOnBeforeMount(() => {
