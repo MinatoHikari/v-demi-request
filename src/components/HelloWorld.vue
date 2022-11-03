@@ -27,7 +27,8 @@
         <a href="https://v3.vuejs.org/" target="_blank">Vue 3 Docs</a>
     </p>
 
-    <button type="button" @click="count++">count is: {{ count }}</button>
+    <button type="button" @click="count++">count plus: {{ count }}</button>
+    <button type="button" @click="count--">count minus: {{ count }}</button>
     <button type="button" @click="boolean = !boolean">boolean is: {{ boolean }}</button>
     <div>
         <button @click="$router.push('/test')">totest</button>
@@ -40,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, watch } from 'vue';
+import { ref, defineComponent, watch, computed } from 'vue';
 import { useVDR } from '../v-demi-request';
 import { useBool } from './global';
 export default defineComponent({
@@ -55,13 +56,16 @@ export default defineComponent({
         const count = ref(0);
         const { boolean } = useBool();
         const { isPass } = useVDR(
-            ref('http://10.160.137.189:10000/verifyCode'),
+            computed(() => `/api/verifyCode?count=${count.value}`),
             async (url?: string) => {
                 return fetch(url ?? '');
             },
             {
                 requiredDeps: [count, boolean],
-                cache: false
+                cache: {
+                    cacheTime: 10000,
+                    backgroundRequest: false
+                }
             }
         );
         watch(boolean, (val) => {

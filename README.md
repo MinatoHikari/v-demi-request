@@ -41,9 +41,8 @@ defineComponent({
     }
 });
 ```
-可传入数组，数组成员将依次传入第二个参数中的请求函数
+可传入 ref 或一个函数，unref 或 函数返回值的变化会触发请求
 
-第一个参数的成员是响应式的，值的变化会触发请求
 ```javascript
 import { useVDR } from 'v-demi-request';
 import { defineComponent } from '@vue/runtime-core';
@@ -52,7 +51,8 @@ import axios from 'axios';
 defineComponent({
     setup() {
         const params = {}
-        const { data, error } = useVDR(['/api/getData', params], axios.post);
+        const count = ref(0)
+        const { data, error } = useVDR(ref(`/api/getData?count=${count.value}`), axios.post);
 
         return {
             data,
@@ -64,8 +64,8 @@ defineComponent({
 
 
 自定义触发请求的依赖
-
 只有当依赖全部为 true 的时候 key 的变化才会触发请求
+此外，依赖值的变化也会触发请求
 ```javascript
 import { useVDR } from 'v-demi-request';
 import { defineComponent } from '@vue/runtime-core';

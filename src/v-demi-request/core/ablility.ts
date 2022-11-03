@@ -1,9 +1,9 @@
-import { VDemiRequestOptions } from "../types/option";
-import { Ref, ref, unref } from "vue-demi";
-import { useListeners } from "./methods";
+import { SendConfig, VDemiRequestOptions } from '../types/option';
+import { Ref, ref, unref } from 'vue-demi';
+import { useListeners } from './methods';
 
 export const useInterval = (
-    send: (pure?: boolean) => Promise<boolean>,
+    send: ({ pure, ignoreCache }?: SendConfig) => Promise<boolean>,
     options: VDemiRequestOptions
 ) => {
     let timeout = 60000;
@@ -63,7 +63,7 @@ export const useInterval = (
 };
 
 export const useRetry = (
-    send: (pure?: boolean) => Promise<boolean>,
+    send: ({ pure, ignoreCache }?: SendConfig) => Promise<boolean>,
     options: VDemiRequestOptions
 ) => {
     const retryCount = ref(0);

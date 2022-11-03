@@ -1,5 +1,5 @@
 import { Ref } from 'vue-demi';
-import { Key, VDemiRequestOptions } from '../types/option';
+import { Key, SendConfig, VDemiRequestOptions } from '../types/option';
 import { useDocumentReActive } from './useDocumentReActive';
 import { useOnlineDetector } from './useOnlineDetector';
 
@@ -9,7 +9,7 @@ export const usePlugins = <T>(
         error: Ref<NonNullable<any> | null>;
         intervalPause: Ref<boolean>;
     },
-    methods: { send: (pure?: boolean) => Promise<boolean> },
+    methods: { send: ({ pure, ignoreCache }?: SendConfig) => Promise<boolean> },
     params: {
         key: Key;
         request: (...args: any) => Promise<any>;

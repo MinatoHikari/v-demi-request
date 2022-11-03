@@ -5,6 +5,15 @@ import * as path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [vue()],
+    server: {
+        proxy: {
+            '/api/': {
+                target: 'http://10.160.139.217:10000/',
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, ''),
+            },
+        },
+    },
     build: {
         lib: {
             entry: path.resolve(__dirname, './src/v-demi-request/index.ts'),

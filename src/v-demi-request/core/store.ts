@@ -13,7 +13,7 @@ export const useStore = <T>(key: Key, data: Ref<T | null>, options: VDemiRequest
     const canceller = ref<WatchStopHandle | null>(null);
 
     const registerWatcher = (sourceKey: string) => {
-        const simpleKey = unref(useSimpleKey(key));
+        const simpleKey = useSimpleKey(key);
         if (!simpleKey) return;
         if (!canceller.value || simpleKey !== sourceKey) {
             if (canceller.value) canceller.value();
@@ -33,15 +33,16 @@ export const useStore = <T>(key: Key, data: Ref<T | null>, options: VDemiRequest
     };
 
     const setCache = (value: NonNullable<any> | null) => {
-        const simpleKey = unref(useSimpleKey(key));
+        const simpleKey = useSimpleKey(key);
         if (simpleKey) {
             store.value.set(simpleKey, value);
             registerWatcher(simpleKey);
         }
+        console.log(store.value);
     };
 
     const getCache = () => {
-        const simpleKey = unref(useSimpleKey(key));
+        const simpleKey = useSimpleKey(key);
         if (simpleKey) return store.value.get(simpleKey) ?? null;
     };
 

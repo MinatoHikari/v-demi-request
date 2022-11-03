@@ -1,10 +1,11 @@
 import { ComputedRef, Ref, UnwrapRef } from 'vue-demi';
 import { EventHookOn } from '@vueuse/core';
+import { SendConfig } from "./option";
 
 export interface VDRResult<T> {
     data: ComputedRef<UnwrapRef<T> | null>;
     error: ComputedRef;
-    send: (pure?: boolean) => Promise<boolean>;
+    send: (config?: SendConfig) => Promise<boolean>;
     loading: ComputedRef<boolean>;
     isPass: ComputedRef<boolean>;
     onSuccess: EventHookOn<T>;

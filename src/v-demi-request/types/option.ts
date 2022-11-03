@@ -42,3 +42,8 @@ export type IntervalConfig = {
     sendOnDocumentUnreactive: boolean;
     sendOffline: boolean;
 };
+
+export type SendConfig = {
+    pure?: boolean;
+    ignoreCache?: boolean;
+};

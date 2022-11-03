@@ -1,5 +1,5 @@
 import { ref, readonly, computed, UnwrapRef, unref, Ref, WatchSource } from 'vue-demi';
-import { Key, VDemiRequestOptions } from '../types/option';
+import { Key, SendConfig, VDemiRequestOptions } from '../types/option';
 import { mergeOptions, useDeps, useKey, useSimpleKey } from './methods';
 import { usePlugins } from '../plugins';
 import { globalOptionsSetter, useStore } from './store';
@@ -35,13 +35,15 @@ function useVDR<K extends Key, T>(
 
     /**
      * send request modified by useVDR
-     * @param pure invoke interval casually
+     * @param config {SendConfig}
      */
-    const send = async (pure: boolean = false) => {
-        console.log(isPass.value);
+    const send = async (config?: SendConfig) => {
+        const pure = config?.pure;
+        const ignoreCache = config?.ignoreCache;
         if (isPass.value) {
-            if (useCacheForRequestResult()) {
+            if (!ignoreCache && useCacheForRequestResult()) {
                 responseHook.trigger(data.value as T);
+                console.log(88888);
                 if (
                     options.cache &&
                     (typeof options.cache === 'boolean' || !options.cache.backgroundRequest)

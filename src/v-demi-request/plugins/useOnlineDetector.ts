@@ -1,12 +1,13 @@
 import { Ref, unref } from 'vue-demi';
 import { useListeners } from '../core/methods';
+import { SendConfig } from "../types/option";
 
 export const useOnlineDetector = (
-    send: (pure: boolean) => Promise<boolean>,
+    send: ({ pure, ignoreCache }?: SendConfig) => Promise<boolean>,
     inKeepAlive: boolean | Ref<boolean> = false
 ) => {
     const listener = () => {
-        send(true);
+        send({ pure: true });
     };
 
     const register = () => {
