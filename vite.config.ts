@@ -10,9 +10,9 @@ export default defineConfig({
             '/api/': {
                 target: 'http://10.160.139.217:10000/',
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, ''),
-            },
-        },
+                rewrite: (path) => path.replace(/^\/api/, '')
+            }
+        }
     },
     build: {
         lib: {
@@ -30,6 +30,11 @@ export default defineConfig({
                     vue2: 'Vue2',
                     'vue-demi': 'VueDemi'
                 }
+            }
+        },
+        terserOptions: {
+            compress: {
+                drop_console: true
             }
         }
     },
