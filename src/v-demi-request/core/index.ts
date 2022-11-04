@@ -43,7 +43,6 @@ function useVDR<K extends Key, T>(
         if (isPass.value) {
             if (!ignoreCache && useCacheForRequestResult()) {
                 responseHook.trigger(data.value as T);
-                console.log(88888);
                 if (
                     options.cache &&
                     (typeof options.cache === 'boolean' || !options.cache.backgroundRequest)

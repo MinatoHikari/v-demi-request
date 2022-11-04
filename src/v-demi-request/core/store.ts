@@ -38,7 +38,6 @@ export const useStore = <T>(key: Key, data: Ref<T | null>, options: VDemiRequest
             store.value.set(simpleKey, value);
             registerWatcher(simpleKey);
         }
-        console.log(store.value);
     };
 
     const getCache = () => {
