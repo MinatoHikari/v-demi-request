@@ -1,0 +1,17 @@
+.DS_Store
+*.local
+src/
+node_modules/
+.idea/
+.vscode/
+.fleet/
+*.log
+vite.config.ts
+tsconfig.json
+tsconfig.build.json
+pnpm-lock.yaml
+.gitignore
+.npmignore
+.prettierrc.js
+shims.d.ts
+index.html

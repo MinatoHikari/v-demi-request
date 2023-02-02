@@ -7,13 +7,22 @@ export const useInterval = (
     options: VDemiRequestOptions
 ) => {
     let timeout = 60000;
+    let existTimeout: number | null = null;
     const intervalPause = ref(false);
-    if (options.interval && typeof options.interval !== 'number') {
-        timeout = options.interval.timeout;
+    if (options.interval) {
+        if (typeof options.interval !== 'number') {
+            timeout = options.interval.timeout;
+        } else {
+            timeout = options.interval;
+        }
     }
 
     const interval = () => {
-        if (!intervalPause.value) setTimeout(() => send(), timeout);
+        if (existTimeout) {
+            clearTimeout(existTimeout);
+            existTimeout = null;
+        }
+        if (!intervalPause.value) existTimeout = setTimeout(() => send(), timeout);
     };
 
     const doPause = () => {
