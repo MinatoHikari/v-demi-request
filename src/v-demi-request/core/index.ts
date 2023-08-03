@@ -50,14 +50,15 @@ function useVDR<K extends Key, T>(
                     return true;
             }
 
-            loading.value = true;
-
             const beforeSendRes = await beforeSendHook.trigger({});
             for (let res of beforeSendRes) {
-                if (typeof res === 'boolean' && !res) return false;
+                if (typeof res === 'boolean' && !res) {
+                    return false;
+                }
             }
             const [unwrapKey] = useKey([key]);
             if (!unwrapKey) return false;
+            loading.value = true;
             return request(unwrapKey)
                 .then((res) => {
                     data.value = ref(res).value;
