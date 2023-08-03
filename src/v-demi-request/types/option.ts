@@ -19,7 +19,7 @@ export interface VDemiRequestOptions {
     retry?: boolean | RetryConfig;
     onError?: (error: Ref<NonNullable<any> | null>) => void;
     onResponse?: (res: any) => void;
-    onBeforeSend?: (key: Key) => void;
+    onBeforeSend?: (key: Key) => void | boolean;
 }
 
 export type SimpleKey = string | WatchSource<string>;
