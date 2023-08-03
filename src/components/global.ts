@@ -1,7 +1,7 @@
-import { Ref, ref } from 'vue';
-import { createGlobalState, CreateGlobalStateReturn } from '@vueuse/core';
+import { ref } from 'vue';
+import { createGlobalState, } from '@vueuse/core';
 
-export const useBool: CreateGlobalStateReturn<{ boolean: Ref<boolean> }> = createGlobalState(() => {
+export const useBool = createGlobalState(() => {
     const boolean = ref(false);
 
     return {

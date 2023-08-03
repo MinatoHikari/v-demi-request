@@ -1,6 +1,6 @@
 import { ComputedRef, Ref, UnwrapRef } from 'vue-demi';
 import { EventHookOn } from '@vueuse/core';
-import { SendConfig } from "./option";
+import { SendConfig } from './option';
 
 export interface VDRResult<T> {
     data: ComputedRef<UnwrapRef<T> | null>;
@@ -13,4 +13,5 @@ export interface VDRResult<T> {
     temporarilyUpdate: (
         cb: (data: Ref<UnwrapRef<T> | null>, setCache: (p: any) => void) => void
     ) => void;
+    onBeforeSend: EventHookOn;
 }

@@ -106,7 +106,8 @@ function useVDR<K extends Key, T>(
         isPass: computed(() => isPass.value),
         onSuccess: responseHook.on as EventHookOn<T>,
         onError: errorHook.on as EventHookOn,
-        temporarilyUpdate: localUpdate
+        temporarilyUpdate: localUpdate,
+        onBeforeSend: beforeSendHook.on
     };
 }
 
